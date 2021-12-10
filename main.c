@@ -2,20 +2,30 @@
 #include <stdlib.h>
 #include <string.h>
 
+void show_menu();
+void show_suggestion();
+void write_suggestion();
+void test_covid();
+void help();
 
-void suggestion(){
+
+void help(){
+    printf("Para poder usar el programa, deberas escribir un numero del 1 al 5 para indicar la opcion que deseas.\n");
+    show_menu();
+}
+
+void show_suggestion(){
     FILE *fp;
-    char suggestion;
-    fp = fopen("sugerencias.txt", "a+t");
-    if (fp == NULL)
-    {
-        printf("No se pudo abrir el archivo");
+    char content;
+    fp = fopen("suggestion.txt", "r");
+    if (fp == NULL){
+        printf("Error opening file!\n");
         exit(1);
-    }
-    printf("\nIntroduce tu sugerencia: ");
-    while ((suggestion = getchar()) != '\n')
-    {
-        printf("%c", fputc(suggestion, fp));
+    } else {
+        printf("Sugerencias:\n");
+        while ((content = fgetc(fp)) != EOF){
+            printf("%c", content);
+        }
     }
     fclose(fp);
 }
@@ -49,22 +59,33 @@ void test_covid(){
 
 }
 
-int show_menu(){
+void show_menu(){
     int answer;
+    printf("Selecciona una opcion:\n1.Cuestinario de covid\n2.Sugerencias\n3.Escribir una cugerencia\n4.Ayuda\n5.Salir\n");
+    scanf("%d", &answer);
     switch (answer){
     case 1:
         test_covid();
         break;
     case 2:
-        suggestion();
+        show_suggestion();
         break;
     case 3:
         write_suggestion();
         break;
+    case 4:
+        help();
+        break;
+    case 5:
+        printf("Adios\n");
+        exit(0);
+        break;
     default:
+        printf("\nOpcion no valida\n");
         break;
     }
 }
+
 
 void requirements() {
     struct personal_data person;
@@ -84,9 +105,7 @@ void requirements() {
 }
 
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv){
     requirements();
-    suggestion();
     return 0;
 }
